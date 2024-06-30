@@ -1,17 +1,19 @@
 package com.tyut.accesscontrol.model.dto;
-
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.tyut.accesscontrol.common.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * 用户更新请求
+ * 用户查询请求
  *
  * @author mahua
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserUpdateRequest implements Serializable {
+public class UserDemoQueryRequest extends PageRequest implements Serializable {
     /**
      * id
      */
@@ -27,16 +29,23 @@ public class UserUpdateRequest implements Serializable {
      */
     private String userAccount;
 
+
+
+
     /**
-     * 用户角色: 0- user, 1 - admin
+     * 用户角色: 0 - user, 1 - admin
      */
     private Integer userRole;
 
     /**
-     * 密码
+     * 创建时间
      */
-    private String userPassword;
+    private Date createTime;
 
-    @TableField(exist = false)
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
     private static final long serialVersionUID = 1L;
 }

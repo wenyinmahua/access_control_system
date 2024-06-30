@@ -1,16 +1,21 @@
 package com.tyut.accesscontrol.model.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * 用户创建请求
+ * 用户更新请求
  *
  * @author mahua
  */
 @Data
-public class UserAddRequest implements Serializable {
+public class UserDemoUpdateRequest implements Serializable {
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 用户昵称
@@ -22,9 +27,8 @@ public class UserAddRequest implements Serializable {
      */
     private String userAccount;
 
-
     /**
-     * 用户角色: 0 - user, 1 - admin
+     * 用户角色: 0- user, 1 - admin
      */
     private Integer userRole;
 
@@ -33,5 +37,6 @@ public class UserAddRequest implements Serializable {
      */
     private String userPassword;
 
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

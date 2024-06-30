@@ -5,8 +5,8 @@ import com.tyut.accesscontrol.annotation.AuthCheck;
 import com.tyut.accesscontrol.common.ErrorCode;
 import com.tyut.accesscontrol.constant.UserConstant;
 import com.tyut.accesscontrol.exception.BusinessException;
-import com.tyut.accesscontrol.model.entity.User;
-import com.tyut.accesscontrol.service.UserService;
+import com.tyut.accesscontrol.model.entity.UserDemo;
+import com.tyut.accesscontrol.service.UserDemoService;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class AuthInterceptor {
 
 	@Resource
-	private UserService userService;
+	private UserDemoService userDemoService;
 
 	@Around("@annotation(authCheck)")
 	public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable {
@@ -40,11 +40,11 @@ public class AuthInterceptor {
 		HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
 
 		//当前登录的用户
-		User user = userService.getLoginUser(request);
+		UserDemo userDemo = userDemoService.getLoginUser(request);
 		// 如果 userRole 是 String 类型的，需要修改第 50 行和第 55 行的 userRoleString 为 userRole；同时删除第 47 行代码 ，取消第 45 行代码的注释，请按步执行；
 //		String userRole = user.getUserRole();
 		// 如果用户的 userRole 是 Integer 类型的
-		Integer userRole = user.getUserRole();
+		Integer userRole = userDemo.getUserRole();
 		String userRoleString = userRole.equals(UserConstant.DEFAULT_ROLE_CODE) ? UserConstant.DEFAULT_ROLE : UserConstant.ADMIN_ROLE;
 		if(CollectionUtils.isNotEmpty(anyRole)){
 			if (!anyRole.contains(userRoleString)){

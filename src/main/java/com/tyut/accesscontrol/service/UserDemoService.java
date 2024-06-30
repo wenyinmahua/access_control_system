@@ -1,6 +1,7 @@
 package com.tyut.accesscontrol.service;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tyut.accesscontrol.model.entity.User;
+import com.tyut.accesscontrol.model.entity.UserDemo;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 * @author mahua
 *
 */
-public interface UserService extends IService<User> {
+public interface UserDemoService extends IService<UserDemo> {
 
 	/**
 	 * 用户注册
@@ -29,7 +30,7 @@ public interface UserService extends IService<User> {
 	 * @param request
 	 * @return 脱敏后的用户信息
 	 */
-	User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+	UserDemo userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
 	/**
 	 * 获取当前登录用户
@@ -37,7 +38,7 @@ public interface UserService extends IService<User> {
 	 * @param request
 	 * @return
 	 */
-	User getLoginUser(HttpServletRequest request);
+	UserDemo getLoginUser(HttpServletRequest request);
 
 	/**
 	 * 是否为管理员

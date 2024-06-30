@@ -46,6 +46,5 @@ CREATE TABLE if not exists log (
     userId BIGINT COMMENT '用户ID',
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP null,
     checkInStatus  TINYINT DEFAULT 0 COMMENT '0-签到失败 | 1-签到成功',
-    checkOutStatus TINYINT DEFAULT 0 COMMENT '0-签退失败 | 1-签退成功',
-    PRIMARY KEY (userId, timestamp)
+    checkOutStatus TINYINT DEFAULT 0 COMMENT '0-签退失败 | 1-签退成功'
 ) COMMENT '日志表';

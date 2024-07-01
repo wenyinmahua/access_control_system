@@ -1,18 +1,27 @@
 package com.tyut.accesscontrol.mapper;
 
 import com.tyut.accesscontrol.model.entity.User;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.*;
 
-/**
-* @author mahua
-* @description 针对表【user(用户表)】的数据库操作Mapper
-* @createDate 2024-07-01 00:14:42
-* @Entity com.tyut.accesscontrol.model.entity.User
-*/
-public interface UserMapper extends BaseMapper<User> {
+import java.util.List;
 
+@Mapper
+public interface UserMapper {
+
+    @Select("SELECT * FROM user")
+    List<User> selectAll();
+
+    @Select("SELECT * FROM user WHERE id = #{id}")
+    User selectById(@Param("id") int id);
+
+    @Insert("INSERT INTO user (username, gender, age, position) VALUES (#{username}, #{gender}, #{age}, #{position})")
+    int insert(User user);
+
+    @Update("UPDATE user SET username = #{username}, gender = #{gender}, age = #{age}, position = #{position} WHERE id = #{id}")
+    int update(User user);
+
+    @Delete("DELETE FROM user WHERE id = #{id}")
+    int deleteById(@Param("id") int id);
 }
-
-
 
 

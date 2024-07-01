@@ -2,6 +2,7 @@ package com.tyut.accesscontrol.mapper;
 
 import com.tyut.accesscontrol.model.entity.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
 * @author mahua
@@ -10,7 +11,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.tyut.accesscontrol.model.entity.Admin
 */
 public interface AdminMapper extends BaseMapper<Admin> {
-
+    @Select("select * from admin where adminName=#{adminName}")
+    public Admin FindAdminByName(String adminName);
 }
 
 

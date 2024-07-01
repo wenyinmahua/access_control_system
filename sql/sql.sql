@@ -6,7 +6,7 @@ CREATE TABLE if not exists admin (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '管理员ID',
     userAccount VARCHAR(50) NOT NULL UNIQUE COMMENT '用户账号',
     userPassword VARCHAR(255) NOT NULL COMMENT '用户密码',
-    username VARCHAR(100) COMMENT '用户姓名',
+    username VARCHAR(100) NOT NULL COMMENT '用户姓名',
     gender TINYINT DEFAULT  0 COMMENT '用户性别: 0-男 | 1-女',
     age INT COMMENT '用户年龄',
     position VARCHAR(100) COMMENT '岗位',
@@ -17,8 +17,8 @@ CREATE TABLE if not exists admin (
 -- 创建用户表
 drop table if exists user;
 CREATE TABLE if not exists user (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户id',
-    username VARCHAR(100) NOT NULL UNIQUE COMMENT '用户姓名',
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    username VARCHAR(100) NOT NULL COMMENT '用户姓名',
     gender TINYINT DEFAULT  0 COMMENT '用户性别: 0-男 | 1-女',
     age INT COMMENT '用户年龄',
     position VARCHAR(100) COMMENT '岗位',
@@ -29,8 +29,8 @@ CREATE TABLE if not exists user (
 -- 创建出入表
 drop table if exists access;
 CREATE TABLE if not exists access (
-    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '出入表id',
-    userId BIGINT NOT NULL COMMENT '用户id',
+    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '出入表ID',
+    userId BIGINT NOT NULL COMMENT '用户ID',
     checkInTime DATETIME DEFAULT CURRENT_TIMESTAMP null,
     checkInStatus  TINYINT DEFAULT 0 COMMENT '0-签到失败 | 1-签到成功',
     checkInImage TEXT COMMENT '签到状态图片',
@@ -42,7 +42,7 @@ CREATE TABLE if not exists access (
 -- 创建日志表
 drop table if exists log;
 CREATE TABLE if not exists log (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志id',
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '日志ID',
     userId BIGINT COMMENT '用户ID',
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP null,
     checkInStatus  TINYINT DEFAULT 0 COMMENT '0-签到失败 | 1-签到成功',

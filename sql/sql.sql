@@ -6,8 +6,8 @@ drop table if exists admin;
 CREATE TABLE if not exists admin (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '管理员ID',
     adminAccount VARCHAR(50) NOT NULL UNIQUE COMMENT '管理员账号',
-    adminPassword VARCHAR(255) NOT NULL COMMENT '管理员密码',
-    adminName VARCHAR(100) NOT NULL COMMENT '管理员姓名',
+    adminPassword VARCHAR(50) NOT NULL COMMENT '管理员密码',
+    adminName VARCHAR(20) NOT NULL COMMENT '管理员姓名',
     gender TINYINT DEFAULT  0 COMMENT '管理员性别: 0-男 | 1-女',
     age INT COMMENT '管理员年龄',
     position VARCHAR(100) COMMENT '岗位',
@@ -19,7 +19,7 @@ CREATE TABLE if not exists admin (
 drop table if exists user;
 CREATE TABLE if not exists user (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
-    username VARCHAR(100) NOT NULL COMMENT '用户姓名',
+    username VARCHAR(20) NOT NULL COMMENT '用户姓名',
     gender TINYINT DEFAULT  0 COMMENT '用户性别: 0-男 | 1-女', 
     age INT COMMENT '用户年龄',
     position VARCHAR(100) COMMENT '岗位',
@@ -32,7 +32,7 @@ drop table if exists access;
 CREATE TABLE if not exists access (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '出入表ID',
     userId BIGINT NOT NULL COMMENT '用户ID',
-    userName VARCHAR(100) NOT NULL COMMENT '用户姓名',
+    userName VARCHAR(20) NOT NULL COMMENT '用户姓名',
     gender TINYINT DEFAULT  0 COMMENT '用户性别: 0-男 | 1-女',
     checkInTime DATETIME DEFAULT NULL COMMENT '签到时间',
     checkInStatus  TINYINT DEFAULT 0 COMMENT '0-签到失败 | 1-签到成功',
@@ -40,7 +40,7 @@ CREATE TABLE if not exists access (
     checkOutTime DATETIME DEFAULT NULL COMMENT '签退时间',
     checkOutStatus TINYINT DEFAULT 0 COMMENT '0-签退失败 | 1-签退成功',
     checkOutImage TEXT COMMENT '签退状态图片',
-    flag VARCHAR(100) DEFAULT '签退' COMMENT '标志'
+    flag VARCHAR(4) DEFAULT '签退' COMMENT '标志'
 ) COMMENT '出入表';
 
 -- 创建异常记录表

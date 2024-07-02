@@ -49,7 +49,7 @@ CREATE TABLE if not exists exception_record (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '异常记录ID',
     recognitionTime DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '识别时间',
     recognitionImage TEXT COMMENT '识别图片',
-    isAlarm TINYINT DEFAULT 0 COMMENT '1-报警 | 2-记录'
+    isAlarm TINYINT COMMENT '1-报警 | 2-记录'
 ) COMMENT '异常记录表';
 
 -- 创建日志表

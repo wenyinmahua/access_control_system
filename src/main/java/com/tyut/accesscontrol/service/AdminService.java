@@ -1,6 +1,7 @@
 package com.tyut.accesscontrol.service;
 
 import com.tyut.accesscontrol.model.dto.AdminLoginDTO;
+import com.tyut.accesscontrol.model.dto.AdminRegisterRequest;
 import com.tyut.accesscontrol.model.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,5 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 */
 public interface AdminService extends IService<Admin> {
 
-	Boolean login(AdminLoginDTO adminLoginDTO, HttpServletRequest request);
+	Admin login(AdminLoginDTO adminLoginDTO, HttpServletRequest request);
+
+	Boolean logout(HttpServletRequest request);
+
+	Admin getLoginAdmin(HttpServletRequest request);
+
+	Boolean register(AdminRegisterRequest adminRegisterRequest);
+
+	Boolean updateAdmin(Admin admin);
 }

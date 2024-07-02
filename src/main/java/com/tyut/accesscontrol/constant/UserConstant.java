@@ -29,5 +29,9 @@ public interface UserConstant {
 
     Integer ADMIN_ROLE_CODE = 1;
 
+    Integer Man = 0;
+
+    Integer Woman = 1;
+
     // endregion
 }

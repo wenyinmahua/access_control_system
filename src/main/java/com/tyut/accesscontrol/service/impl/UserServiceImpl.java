@@ -1,9 +1,17 @@
 package com.tyut.accesscontrol.service.impl;
+import java.util.Date;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tyut.accesscontrol.common.DeleteRequest;
+import com.tyut.accesscontrol.common.ErrorCode;
+import com.tyut.accesscontrol.exception.BusinessException;
+import com.tyut.accesscontrol.model.dto.UserQueryDTO;
 import com.tyut.accesscontrol.model.entity.User;
 import com.tyut.accesscontrol.service.UserService;
 import com.tyut.accesscontrol.mapper.UserMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +23,51 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
 
+	@Override
+	public Page<User> getPageUser(UserQueryDTO userQueryDTO) {
+		if (userQueryDTO == null){
+			throw new BusinessException(ErrorCode.PARAMS_ERROR);
+		}
+		String username = userQueryDTO.getUsername();
+		Integer gender = userQueryDTO.getGender();
+		Integer age = userQueryDTO.getAge();
+		String position = userQueryDTO.getPosition();
+		long current = userQueryDTO.getCurrent();
+		long pageSize = userQueryDTO.getPageSize();
+		QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+		if (StringUtils.isNotEmpty(username)){
+			queryWrapper.like("username",username);
+		}
+		if (gender != null){
+			queryWrapper.eq("gender",gender);
+		}
+		if (age != null){
+			queryWrapper.eq("age",age);
+		}
+		if (StringUtils.isNotEmpty(position)){
+			queryWrapper.like("position",position);
+		}
+		return this.page(new Page<>(current, pageSize), queryWrapper);
+	}
+
+	@Override
+	public Boolean updateUser(User user) {
+		QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq("id",user.getId());
+		return this.update(user,queryWrapper);
+	}
+
+	@Override
+	public Boolean deleteUserById(DeleteRequest deleteRequest) {
+		if (deleteRequest == null){
+			throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+		}
+		Long id = deleteRequest.getId();
+		if (id < 0){
+			throw new BusinessException(ErrorCode.PARAMS_ERROR);
+		}
+		return this.removeById(id);
+	}
 }
 
 

@@ -15,47 +15,52 @@ import lombok.Data;
 @TableName(value ="access")
 @Data
 public class Access implements Serializable {
-    /**
-     * 出入表id
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+	/**
+	 * 出入表ID
+	 */
+	@TableId(type = IdType.AUTO)
+	private Long id;
 
-    /**
-     * 用户id
-     */
-    private Long userId;
+	/**
+	 * 用户ID
+	 */
+	private Long userId;
 
-    /**
-     * 
-     */
-    private Date checkInTime;
+	/**
+	 * 签到时间
+	 */
+	private Date checkInTime;
 
-    /**
-     * 0-签到失败 | 1-签到成功
-     */
-    private Integer checkInStatus;
+	/**
+	 * 0-未签到 | 1-已签到
+	 */
+	private Integer checkInStatus;
 
-    /**
-     * 签到状态图片
-     */
-    private String checkInImage;
+	/**
+	 * 签到状态图片
+	 */
+	private String checkInImage;
 
-    /**
-     * 
-     */
-    private Date checkIutTime;
+	/**
+	 * 签退时间
+	 */
+	private Date checkOutTime;
 
-    /**
-     * 0-签退失败 | 1-签退成功
-     */
-    private Integer checkOutStatus;
+	/**
+	 * 0-未签退 | 1-已签退
+	 */
+	private Integer checkOutStatus;
 
-    /**
-     * 签退状态图片
-     */
-    private String checkOutImage;
+	/**
+	 * 签退状态图片
+	 */
+	private String checkOutImage;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+	/**
+	 * 0-签退 | 1-签到
+	 */
+	private Integer flag;
+
+	@TableField(exist = false)
+	private static final long serialVersionUID = 1L;
 }

@@ -35,10 +35,10 @@ CREATE TABLE if not exists access (
     userName VARCHAR(20) NOT NULL COMMENT '用户姓名',
     gender TINYINT DEFAULT  0 COMMENT '用户性别: 0-男 | 1-女',
     checkInTime DATETIME DEFAULT NULL COMMENT '签到时间',
-    checkInStatus  TINYINT DEFAULT 0 COMMENT '0-签到失败 | 1-签到成功',
+    checkInStatus  TINYINT DEFAULT 0 COMMENT '0-未签到 | 1-已签到',
     checkInImage TEXT COMMENT '签到状态图片',
     checkOutTime DATETIME DEFAULT NULL COMMENT '签退时间',
-    checkOutStatus TINYINT DEFAULT 0 COMMENT '0-签退失败 | 1-签退成功',
+    checkOutStatus TINYINT DEFAULT 0 COMMENT '0-未签退 | 1-已签退',
     checkOutImage TEXT COMMENT '签退状态图片',
     flag VARCHAR(4) DEFAULT '签退' COMMENT '标志'
 ) COMMENT '出入表';

@@ -31,6 +31,7 @@ drop table if exists access;
 CREATE TABLE if not exists access (
     id INT PRIMARY KEY AUTO_INCREMENT COMMENT '出入表ID',
     userId BIGINT NOT NULL COMMENT '用户ID',
+    flag VARCHAR(100) DEFAULT '签退',
     checkInTime DATETIME DEFAULT CURRENT_TIMESTAMP null,
     checkInStatus  TINYINT DEFAULT 0 COMMENT '0-签到失败 | 1-签到成功',
     checkInImage TEXT COMMENT '签到状态图片',

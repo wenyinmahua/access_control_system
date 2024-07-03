@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
+import com.tyut.accesscontrol.model.dto.SignFromDTO;
 import com.tyut.accesscontrol.model.entity.Access;
 import com.tyut.accesscontrol.model.vo.AccessVO;
 
@@ -19,4 +20,6 @@ public interface AccessService extends IService<Access> {
 	Boolean updateAccess(Access access);
 
 	Boolean deleteAccessById(DeleteRequest deleteRequest);
+
+	Boolean userSignInOrOut(SignFromDTO signFromDTO);
 }

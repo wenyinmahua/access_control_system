@@ -1,7 +1,9 @@
 package com.tyut.accesscontrol.service;
 
+import com.tyut.accesscontrol.model.dto.DateQueryDTO;
 import com.tyut.accesscontrol.model.entity.Log;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tyut.accesscontrol.model.vo.LogVO;
 
 /**
 * @author mahua
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface LogService extends IService<Log> {
 
+	LogVO getLogByMonth(DateQueryDTO dateQueryDTO);
 }

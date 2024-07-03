@@ -1,6 +1,7 @@
 package com.tyut.accesscontrol.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tyut.accesscontrol.common.BaseResponse;
 import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.common.ResultUtils;
@@ -10,15 +11,15 @@ import com.tyut.accesscontrol.model.entity.Admin;
 import com.tyut.accesscontrol.model.entity.ExceptionRecord;
 import com.tyut.accesscontrol.model.entity.User;
 import com.tyut.accesscontrol.model.vo.AccessVO;
-import com.tyut.accesscontrol.service.AccessService;
-import com.tyut.accesscontrol.service.AdminService;
-import com.tyut.accesscontrol.service.ExceptionRecordService;
-import com.tyut.accesscontrol.service.UserService;
+import com.tyut.accesscontrol.model.vo.LogVO;
+import com.tyut.accesscontrol.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/admin")
@@ -34,6 +35,9 @@ public class AdminController {
 
 	@Resource
 	private ExceptionRecordService exceptionRecordService;
+
+	@Resource
+	private LogService logService;
 
 	// region 管理员crud
 	// 管理员登录
@@ -146,4 +150,14 @@ public class AdminController {
 		return ResultUtils.success(exceptionRecordService.deleteExceptionRecord(deleteRequest));
 	}
 	// endregion
+
+
+	// region 日志表
+	@PostMapping("/get/log")
+	public BaseResponse<LogVO> getLogByMonth(@RequestBody DateQueryDTO dateQueryDTO){
+		return ResultUtils.success(logService.getLogByMonth(dateQueryDTO));
+
+	}
+
+
 }

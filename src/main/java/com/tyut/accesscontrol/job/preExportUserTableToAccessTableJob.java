@@ -1,12 +1,16 @@
 package com.tyut.accesscontrol.job;
 
 import com.tyut.accesscontrol.model.entity.Access;
+import com.tyut.accesscontrol.model.entity.Log;
 import com.tyut.accesscontrol.service.AccessService;
+import com.tyut.accesscontrol.service.LogService;
 import com.tyut.accesscontrol.service.UserService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -17,6 +21,9 @@ public class preExportUserTableToAccessTableJob {
 
 	@Resource
 	private AccessService accessService;
+
+	@Resource
+	private LogService logService;
 
 
 
@@ -34,5 +41,11 @@ public class preExportUserTableToAccessTableJob {
 
 	}
 
+	@Scheduled(cron = "0 54 13 * * ?")
+	public void doUpdateLogJob(){
+		Log log = new Log();
+		log.setLogDate(LocalDate.now());
+		logService.save(log);
+	}
 
 }

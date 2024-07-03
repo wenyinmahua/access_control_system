@@ -51,7 +51,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		if (id != null) {
 			queryWrapper.eq("id", id);
 		}
-		if (username != null) {
+		if (!StringUtils.isEmpty(username)) {
 			List<Long> userIds = userService.getUserIdsByName(username);
 			if (!userIds.isEmpty()){
 				queryWrapper.in("userId", userIds);

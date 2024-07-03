@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import lombok.Data;
 
@@ -24,22 +25,22 @@ public class Log implements Serializable {
     /**
      * 日志日期
      */
-    private Date logDate;
+    private LocalDate logDate;
 
     /**
      * 签到总次数
      */
-    private Integer totalCheckedIn;
+    private Long totalCheckedIn;
 
     /**
      * 签退总次数
      */
-    private Integer totalCheckedOut;
+    private Long totalCheckedOut;
 
     /**
      * 识别失败总次数
      */
-    private Integer totalRecognitionFailures;
+    private Long totalRecognitionFailures;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

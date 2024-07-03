@@ -1,9 +1,13 @@
 package com.tyut.accesscontrol.service.impl;
+import com.tyut.accesscontrol.common.BaseResponse;
+import com.tyut.accesscontrol.common.ResultUtils;
 import com.tyut.accesscontrol.constant.AlarmConstant;
 import com.tyut.accesscontrol.constant.SignInOrOutConstant;
 import com.tyut.accesscontrol.model.entity.ExceptionRecord;
 import com.tyut.accesscontrol.model.entity.Log;
 import com.tyut.accesscontrol.service.ExceptionRecordService;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
@@ -19,7 +23,6 @@ import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.common.ErrorCode;
 import com.tyut.accesscontrol.exception.BusinessException;
 import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
-import com.tyut.accesscontrol.model.dto.SignFromDTO;
 import com.tyut.accesscontrol.model.entity.Access;
 import com.tyut.accesscontrol.model.vo.AccessVO;
 import com.tyut.accesscontrol.service.AccessService;
@@ -30,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -126,9 +131,10 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 	}
 
 	@Override
-	public Boolean userSignInOrOut(SignFromDTO signFromDTO) {
-		String imageBase64 = signFromDTO.getFile().getName();
-		Long signUserId = signFromDTO.getUserId();
+	public BaseResponse<Boolean> userSignInOrOut(MultipartFile file) throws IOException {
+
+		String imageBase64 = "data:image/jpg;base64," + Base64Utils.encodeToString(file.getBytes());
+		Long signUserId = Long.valueOf(file.getOriginalFilename().matches("-?\\d+") ? Long.valueOf(file.getOriginalFilename()) : -1);
 		LocalDate thisDay = LocalDate.now();
 		if (StringUtils.isEmpty(imageBase64)){
 		throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -141,11 +147,12 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 			updateWrapper.eq("logDate",thisDay).setSql("totalRecognitionFailures = totalRecognitionFailures + 1");
 			logService.update(updateWrapper);
-			return exceptionRecordService.save(exceptionRecord);
+			exceptionRecordService.save(exceptionRecord);
+			return ResultUtils.error(ErrorCode.FORBIDDEN_ERROR,"签到失败，error person!");
 		}
 		LocalTime now = LocalTime.now();
 		// 判断当前时间是否在0点到6点之间
-		boolean isNotSignInTime = now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.of(6, 0));
+		boolean isNotSignInTime = now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.of(6, 00));
 		if (isNotSignInTime) {
 			ExceptionRecord exceptionRecord = new ExceptionRecord();
 			exceptionRecord.setRecognitionTime(new Date());
@@ -154,7 +161,8 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 			updateWrapper.eq("logDate",thisDay).setSql("totalRecognitionFailures = totalRecognitionFailures + 1");
 			logService.update(updateWrapper);
-			return exceptionRecordService.save(exceptionRecord);
+			exceptionRecordService.save(exceptionRecord);
+			return ResultUtils.error(ErrorCode.FORBIDDEN_ERROR,"签到失败，请在指定时间内签到！");
 		}
 
 		QueryWrapper<Access> queryWrapper = new QueryWrapper<>();
@@ -170,6 +178,9 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		Integer flag = access.getFlag();
 		// 之前状态是签到，这次识别为签退
 		if (Objects.equals(flag, SignInOrOutConstant.SIGN_IN)){
+			if(StringUtils.isNotEmpty(access.getCheckOutImage())){
+				return ResultUtils.error(ErrorCode.OPERATION_ERROR,"已签退");
+			}
 			updateAccess.setCheckOutImage(imageBase64);
 			updateAccess.setCheckOutTime(new Date());
 			// 这个 SIGN_IN 指的是成功签退
@@ -177,7 +188,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 			updateWrapper.eq("logDate",thisDay).setSql("totalCheckedOut = totalCheckedOut + 1");
 			logService.update(updateWrapper);
-			return this.updateById(updateAccess);
+			return ResultUtils.success(this.updateById(updateAccess),"签退成功！");
 		} else {
 				// 之前的状态是未签到，这里是签到操作
 				updateAccess.setCheckInImage(imageBase64);
@@ -187,8 +198,9 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 				UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 				updateWrapper.eq("logDate",thisDay).setSql("totalCheckedIn = totalCheckedIn + 1");
 				logService.update(updateWrapper);
-				return this.updateById(updateAccess);
-			}
+				return ResultUtils.success(this.updateById(updateAccess),"签到成功！");
+
+		}
 	}
 }
 

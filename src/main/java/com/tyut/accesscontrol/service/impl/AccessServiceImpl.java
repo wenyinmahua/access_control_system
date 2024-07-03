@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 * @createDate 2024-07-03 01:25:43
 */
 @Service
-public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access.Access>
+public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
     implements AccessService{
 
 }

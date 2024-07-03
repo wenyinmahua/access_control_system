@@ -1,7 +1,7 @@
 package com.tyut.accesscontrol.service;
 
 import com.tyut.accesscontrol.model.dto.AdminLoginDTO;
-import com.tyut.accesscontrol.model.dto.AdminRegisterRequest;
+import com.tyut.accesscontrol.model.dto.AdminRegisterDTO;
 import com.tyut.accesscontrol.model.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,7 +20,7 @@ public interface AdminService extends IService<Admin> {
 
 	Admin getLoginAdmin(HttpServletRequest request);
 
-	Boolean register(AdminRegisterRequest adminRegisterRequest);
+	Boolean register(AdminRegisterDTO adminRegisterDTO);
 
 	Boolean updateAdmin(Admin admin);
 }

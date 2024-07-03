@@ -12,6 +12,7 @@ import java.util.Date;
 /**
  * 出入表
  * @TableName access
+ * 显示层对象，通过是Web向模板渲染引擎层传输的对象
  */
 @TableName(value ="access")
 @Data

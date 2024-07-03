@@ -2,10 +2,8 @@ package com.tyut.accesscontrol.common;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class BaseResponse<T> implements Serializable {
+public class BaseResponse<T> {   //实现 Serializable 接口,用于数据传输
 
 	private int code;
 

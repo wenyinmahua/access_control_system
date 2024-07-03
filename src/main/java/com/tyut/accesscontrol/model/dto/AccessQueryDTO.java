@@ -14,14 +14,15 @@ import java.util.Date;
 /**
  * 出入表
  * @TableName access
+ * DTO是数据传输对象，Service向外传输的对象
  */
 @TableName(value ="access")
-@Data
+@Data   // Lombok 的注解,用于自动生成 getter/setter 方法，toString 方法
 public class AccessQueryDTO extends PageRequest implements Serializable {
 	/**
 	 * 出入表ID
 	 */
-	@TableId(type = IdType.AUTO)
+	@TableId(type = IdType.AUTO)  //主键，自增
 	private Long id;
 
 	/**
@@ -31,6 +32,8 @@ public class AccessQueryDTO extends PageRequest implements Serializable {
 
 	/**
 	 * 签到时间
+	 *  通过注解指定时间格式和时区，使用 @JsonFormat 注解,可以确保在 JSON 序列化/反序列化时,
+	 *  日期属性能够正确地被格式化
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
 	private Date checkInTime;
@@ -66,6 +69,6 @@ public class AccessQueryDTO extends PageRequest implements Serializable {
 	 */
 	private Integer flag;
 
-	@TableField(exist = false)
+	@TableField(exist = false)   //指定 serialVersionUID 字段不需要映射到数据库表中，减小程序开销，提高性能
 	private static final long serialVersionUID = 1L;
 }

@@ -13,6 +13,10 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 组件类，定期执行两个任务：
+ * 1）doExportUserTableToAccessTableJob
+ */
 @Component
 public class preExportUserTableToAccessTableJob {
 
@@ -27,6 +31,7 @@ public class preExportUserTableToAccessTableJob {
 
 
 
+	//将用户表中的数据批量导出到 Access 表，每天0点更新
 	@Scheduled(cron = "0 0 0 * * ?")
 	public void doExportUserTableToAccessTableJob(){
 		List<Long> ids = userService.getUserIds();
@@ -41,6 +46,7 @@ public class preExportUserTableToAccessTableJob {
 
 	}
 
+	//定期更新日志表
 	@Scheduled(cron = "0 54 13 * * ?")
 	public void doUpdateLogJob(){
 		Log log = new Log();

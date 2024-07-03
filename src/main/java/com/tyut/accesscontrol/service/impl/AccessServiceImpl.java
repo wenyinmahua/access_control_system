@@ -1,7 +1,14 @@
 package com.tyut.accesscontrol.service.impl;
+import com.tyut.accesscontrol.constant.AlarmConstant;
+import com.tyut.accesscontrol.constant.SignInOrOutConstant;
+import com.tyut.accesscontrol.model.entity.ExceptionRecord;
+import com.tyut.accesscontrol.model.entity.Log;
+import com.tyut.accesscontrol.service.ExceptionRecordService;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -12,10 +19,12 @@ import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.common.ErrorCode;
 import com.tyut.accesscontrol.exception.BusinessException;
 import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
+import com.tyut.accesscontrol.model.dto.SignFromDTO;
 import com.tyut.accesscontrol.model.entity.Access;
 import com.tyut.accesscontrol.model.vo.AccessVO;
 import com.tyut.accesscontrol.service.AccessService;
 import com.tyut.accesscontrol.mapper.AccessMapper;
+import com.tyut.accesscontrol.service.LogService;
 import com.tyut.accesscontrol.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +45,12 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 
 	@Resource
 	private UserService userService;
+
+	@Resource
+	private ExceptionRecordService exceptionRecordService;
+
+	@Resource
+	private LogService logService;
 
 	@Override
 	public Page<AccessVO> getPageAccess(AccessQueryDTO accessQueryDTO) {
@@ -108,6 +123,72 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			throw new BusinessException(ErrorCode.PARAMS_ERROR);
 		}
 		return this.removeById(id);
+	}
+
+	@Override
+	public Boolean userSignInOrOut(SignFromDTO signFromDTO) {
+		String imageBase64 = signFromDTO.getFile().getName();
+		Long signUserId = signFromDTO.getUserId();
+		LocalDate thisDay = LocalDate.now();
+		if (StringUtils.isEmpty(imageBase64)){
+		throw new BusinessException(ErrorCode.PARAMS_ERROR);
+		}
+		if (signUserId == null || signUserId < 0){
+			ExceptionRecord exceptionRecord = new ExceptionRecord();
+			exceptionRecord.setRecognitionTime(new Date());
+			exceptionRecord.setRecognitionImage(imageBase64);
+			exceptionRecord.setIsAlarm(AlarmConstant.ALARM);
+			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
+			updateWrapper.eq("logDate",thisDay).setSql("totalRecognitionFailures = totalRecognitionFailures + 1");
+			logService.update(updateWrapper);
+			return exceptionRecordService.save(exceptionRecord);
+		}
+		LocalTime now = LocalTime.now();
+		// 判断当前时间是否在0点到6点之间
+		boolean isNotSignInTime = now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.of(6, 0));
+		if (isNotSignInTime) {
+			ExceptionRecord exceptionRecord = new ExceptionRecord();
+			exceptionRecord.setRecognitionTime(new Date());
+			exceptionRecord.setRecognitionImage(imageBase64);
+			exceptionRecord.setIsAlarm(AlarmConstant.RECORD);
+			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
+			updateWrapper.eq("logDate",thisDay).setSql("totalRecognitionFailures = totalRecognitionFailures + 1");
+			logService.update(updateWrapper);
+			return exceptionRecordService.save(exceptionRecord);
+		}
+
+		QueryWrapper<Access> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq("userId",signUserId);
+		queryWrapper.eq("thisDay",thisDay);
+		Access access = this.getOne(queryWrapper);
+		if (access == null){
+			throw new BusinessException(ErrorCode.PARAMS_ERROR);
+		}
+		Access updateAccess = new Access();
+		updateAccess.setId(access.getId());
+		updateAccess.setUserId(signUserId);
+		Integer flag = access.getFlag();
+		// 之前状态是签到，这次识别为签退
+		if (Objects.equals(flag, SignInOrOutConstant.SIGN_IN)){
+			updateAccess.setCheckOutImage(imageBase64);
+			updateAccess.setCheckOutTime(new Date());
+			// 这个 SIGN_IN 指的是成功签退
+			updateAccess.setCheckOutStatus(SignInOrOutConstant.SIGN_IN);
+			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
+			updateWrapper.eq("logDate",thisDay).setSql("totalCheckedOut = totalCheckedOut + 1");
+			logService.update(updateWrapper);
+			return this.updateById(updateAccess);
+		} else {
+				// 之前的状态是未签到，这里是签到操作
+				updateAccess.setCheckInImage(imageBase64);
+				updateAccess.setCheckInTime(new Date());
+				updateAccess.setCheckInStatus(SignInOrOutConstant.SIGN_IN);
+				updateAccess.setFlag(SignInOrOutConstant.SIGN_IN);
+				UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
+				updateWrapper.eq("logDate",thisDay).setSql("totalCheckedIn = totalCheckedIn + 1");
+				logService.update(updateWrapper);
+				return this.updateById(updateAccess);
+			}
 	}
 }
 

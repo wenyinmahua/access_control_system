@@ -8,7 +8,7 @@ spring:
     name: access_control_system
   profiles:
     # 复制 application-dev.yml文件，新建一个文件名为 application-test.yml 修改数据库信息连接信息为自己的连接信息
-    active: dev
+    active: test
   # 解决knife4j接口文档异常：Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
   mvc:
     pathmatch:

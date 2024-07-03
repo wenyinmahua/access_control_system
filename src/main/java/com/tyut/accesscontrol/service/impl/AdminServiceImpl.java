@@ -6,7 +6,7 @@ import com.tyut.accesscontrol.common.ErrorCode;
 import com.tyut.accesscontrol.constant.UserConstant;
 import com.tyut.accesscontrol.exception.BusinessException;
 import com.tyut.accesscontrol.model.dto.AdminLoginDTO;
-import com.tyut.accesscontrol.model.dto.AdminRegisterRequest;
+import com.tyut.accesscontrol.model.dto.AdminRegisterDTO;
 import com.tyut.accesscontrol.model.entity.Admin;
 import com.tyut.accesscontrol.service.AdminService;
 import com.tyut.accesscontrol.mapper.AdminMapper;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     implements AdminService{
 
-	private final String SALT = "TYUT";
+	private static final String SALT = "TYUT";
 
 	@Override
 	public Admin login(AdminLoginDTO adminLoginDTO, HttpServletRequest request) {
@@ -73,13 +73,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 	}
 
 	@Override
-	public Boolean register(AdminRegisterRequest adminRegisterRequest) {
-		if (adminRegisterRequest == null){
+	public Boolean register(AdminRegisterDTO adminRegisterDTO) {
+		if (adminRegisterDTO == null){
 			throw new BusinessException(ErrorCode.SYSTEM_ERROR);
 		}
-		String userAccount = adminRegisterRequest.getUserAccount();
-		String userPassword = adminRegisterRequest.getUserPassword();
-		String checkPassword = adminRegisterRequest.getCheckPassword();
+		String userAccount = adminRegisterDTO.getUserAccount();
+		String userPassword = adminRegisterDTO.getUserPassword();
+		String checkPassword = adminRegisterDTO.getCheckPassword();
 		if (StringUtils.isAnyEmpty(userAccount,userPassword, checkPassword)){
 			throw new BusinessException(ErrorCode.PARAMS_ERROR);
 		}

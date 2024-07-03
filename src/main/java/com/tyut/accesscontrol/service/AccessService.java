@@ -1,7 +1,11 @@
 package com.tyut.accesscontrol.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tyut.accesscontrol.common.DeleteRequest;
+import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
 import com.tyut.accesscontrol.model.entity.Access;
+import com.tyut.accesscontrol.model.vo.AccessVO;
 
 /**
 * @author mahua
@@ -10,4 +14,9 @@ import com.tyut.accesscontrol.model.entity.Access;
 */
 public interface AccessService extends IService<Access> {
 
+	Page<AccessVO> getPageAccess(AccessQueryDTO accessQueryDTO);
+
+	Boolean updateAccess(Access access);
+
+	Boolean deleteAccessById(DeleteRequest deleteRequest);
 }

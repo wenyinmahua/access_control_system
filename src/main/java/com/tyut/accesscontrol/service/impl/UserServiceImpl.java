@@ -1,5 +1,5 @@
 package com.tyut.accesscontrol.service.impl;
-import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,6 +14,8 @@ import com.tyut.accesscontrol.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
 * @author mahua
 * @description 针对表【user(用户表)】的数据库操作Service实现
@@ -22,6 +24,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
+
+	@Resource
+	private UserMapper userMapper;
 
 	@Override
 	public Page<User> getPageUser(UserQueryDTO userQueryDTO) {
@@ -67,6 +72,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 			throw new BusinessException(ErrorCode.PARAMS_ERROR);
 		}
 		return this.removeById(id);
+	}
+
+	@Override
+	public List<Long> getUserIds() {
+		return userMapper.getUserIds();
+	}
+
+	@Override
+	public List<Long> getUserIdsByName(String username) {
+		List<Long> ids = userMapper.getUserIdsByName(username);
+		return ids;
+	}
+
+	@Override
+	public String getUserNameById(Long userId) {
+		return userMapper.getUserNameById(userId);
 	}
 }
 

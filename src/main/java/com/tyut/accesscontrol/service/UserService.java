@@ -6,6 +6,8 @@ import com.tyut.accesscontrol.model.dto.UserQueryDTO;
 import com.tyut.accesscontrol.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author mahua
 * @description 针对表【user(用户表)】的数据库操作Service
@@ -18,4 +20,10 @@ public interface UserService extends IService<User> {
 	Boolean updateUser(User user);
 
 	Boolean deleteUserById(DeleteRequest deleteRequest);
+
+	List<Long> getUserIds();
+
+	List<Long> getUserIdsByName(String username);
+
+	String getUserNameById(Long userId);
 }

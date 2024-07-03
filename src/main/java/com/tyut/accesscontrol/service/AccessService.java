@@ -2,11 +2,14 @@ package com.tyut.accesscontrol.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tyut.accesscontrol.common.BaseResponse;
 import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
-import com.tyut.accesscontrol.model.dto.SignFromDTO;
 import com.tyut.accesscontrol.model.entity.Access;
 import com.tyut.accesscontrol.model.vo.AccessVO;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
 * @author mahua
@@ -21,5 +24,5 @@ public interface AccessService extends IService<Access> {
 
 	Boolean deleteAccessById(DeleteRequest deleteRequest);
 
-	Boolean userSignInOrOut(SignFromDTO signFromDTO);
+	BaseResponse<Boolean> userSignInOrOut(MultipartFile file) throws IOException;
 }

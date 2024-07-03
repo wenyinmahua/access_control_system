@@ -58,8 +58,10 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			}
 		}
 		if (checkInTime != null) {
-			log.error(checkInTime.toString());
+			LocalDate nextDay = checkInTime.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate().plusDays(1);
 			queryWrapper.gt("checkInTime", checkInTime);
+			log.error(nextDay.toString());
+			queryWrapper.lt("thisDay", nextDay);
 		}else if (StringUtils.isEmpty(username)){
 			LocalDate localDate = LocalDate.now();
 			queryWrapper.ge("thisDay",localDate);

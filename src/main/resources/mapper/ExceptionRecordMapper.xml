@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyut.accesscontrol.mapper.ExceptionRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.tyut.accesscontrol.model.entity.ExceptionRecord">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="recognitionTime" column="recognitionTime" jdbcType="TIMESTAMP"/>
+            <result property="recognitionImage" column="recognitionImage" jdbcType="VARCHAR"/>
+            <result property="isAlarm" column="isAlarm" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,recognitionTime,recognitionImage,
+        isAlarm
+    </sql>
+</mapper>

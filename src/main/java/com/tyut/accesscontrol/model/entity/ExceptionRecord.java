@@ -9,37 +9,32 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 日志表
- * @TableName log
+ * 异常记录表
+ * @TableName exception_record
  */
-@TableName(value ="log")
+@TableName(value ="exception_record")
 @Data
-public class Log implements Serializable {
+public class ExceptionRecord implements Serializable {
     /**
-     * 日志ID
+     * 异常记录ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 日志日期
+     * 识别时间
      */
-    private Date logDate;
+    private Date recognitionTime;
 
     /**
-     * 签到总次数
+     * 识别图片
      */
-    private Integer totalCheckedIn;
+    private String recognitionImage;
 
     /**
-     * 签退总次数
+     * 1-报警 | 2-记录
      */
-    private Integer totalCheckedOut;
-
-    /**
-     * 识别失败总次数
-     */
-    private Integer totalRecognitionFailures;
+    private Integer isAlarm;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -59,7 +59,7 @@ CREATE TABLE if not exists exception_record (
 drop table if exists log;
 CREATE TABLE if not exists log (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '日志ID',
-    logDate DATE DEFAULT (CURRENT_DATE) COMMENT '日志日期',
+    logDate DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '日志日期',
     totalCheckedIn INT DEFAULT 0 COMMENT '签到总次数',
     totalCheckedOut INT DEFAULT 0 COMMENT '签退总次数',
     totalRecognitionFailures INT DEFAULT 0 COMMENT '识别失败总次数'

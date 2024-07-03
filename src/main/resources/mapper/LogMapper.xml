@@ -6,14 +6,14 @@
 
     <resultMap id="BaseResultMap" type="com.tyut.accesscontrol.model.entity.Log">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="userId" jdbcType="BIGINT"/>
-            <result property="timestamp" column="timestamp" jdbcType="TIMESTAMP"/>
-            <result property="checkInStatus" column="checkInStatus" jdbcType="TINYINT"/>
-            <result property="checkOutStatus" column="checkOutStatus" jdbcType="TINYINT"/>
+            <result property="logDate" column="logDate" jdbcType="TIMESTAMP"/>
+            <result property="totalCheckedIn" column="totalCheckedIn" jdbcType="INTEGER"/>
+            <result property="totalCheckedOut" column="totalCheckedOut" jdbcType="INTEGER"/>
+            <result property="totalRecognitionFailures" column="totalRecognitionFailures" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,userId,timestamp,
-        checkInStatus,checkOutStatus
+        id,logDate,totalCheckedIn,
+        totalCheckedOut,totalRecognitionFailures
     </sql>
 </mapper>

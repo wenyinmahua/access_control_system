@@ -1,5 +1,8 @@
 package com.tyut.accesscontrol.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tyut.accesscontrol.common.DeleteRequest;
+import com.tyut.accesscontrol.model.dto.ExceptionRecordQueryDTO;
 import com.tyut.accesscontrol.model.entity.ExceptionRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +13,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface ExceptionRecordService extends IService<ExceptionRecord> {
 
+	Page<ExceptionRecord> getPageExceptionRecord(ExceptionRecordQueryDTO exceptionRecordQueryDTO);
+
+	Boolean updateExceptionRecord(ExceptionRecord exceptionRecord);
+
+	Boolean deleteExceptionRecord(DeleteRequest deleteRequest);
 }

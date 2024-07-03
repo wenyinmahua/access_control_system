@@ -4,16 +4,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyut.accesscontrol.common.BaseResponse;
 import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.common.ResultUtils;
-import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
-import com.tyut.accesscontrol.model.dto.AdminLoginDTO;
-import com.tyut.accesscontrol.model.dto.AdminRegisterDTO;
-import com.tyut.accesscontrol.model.dto.UserQueryDTO;
+import com.tyut.accesscontrol.model.dto.*;
 import com.tyut.accesscontrol.model.entity.Access;
 import com.tyut.accesscontrol.model.entity.Admin;
+import com.tyut.accesscontrol.model.entity.ExceptionRecord;
 import com.tyut.accesscontrol.model.entity.User;
 import com.tyut.accesscontrol.model.vo.AccessVO;
 import com.tyut.accesscontrol.service.AccessService;
 import com.tyut.accesscontrol.service.AdminService;
+import com.tyut.accesscontrol.service.ExceptionRecordService;
 import com.tyut.accesscontrol.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +31,9 @@ public class AdminController {
 
 	@Resource
 	private AccessService accessService;
+
+	@Resource
+	private ExceptionRecordService exceptionRecordService;
 
 	// region 管理员crud
 	// 管理员登录
@@ -124,4 +126,24 @@ public class AdminController {
 
 	//endregion
 
+	// region 异常出入表crud
+
+	// 分页查询异常出入表
+	@PostMapping("/get/exceptionRecord")
+	public BaseResponse<Page<ExceptionRecord>> getPageExceptionRecord(@RequestBody ExceptionRecordQueryDTO exceptionRecordQueryDTO){
+		return ResultUtils.success(exceptionRecordService.getPageExceptionRecord(exceptionRecordQueryDTO));
+	}
+
+	// 修改异常出入表的信息
+	@PostMapping("/update/exceptionRecord")
+	public BaseResponse<Boolean> updateExceptionRecord(@RequestBody ExceptionRecord exceptionRecord){
+		return ResultUtils.success(exceptionRecordService.updateExceptionRecord(exceptionRecord));
+	}
+
+	// 删除异常出入表的信息
+	@PostMapping("/delete/exceptionRecord")
+	public BaseResponse<Boolean> deleteExceptionRecord(@RequestBody DeleteRequest deleteRequest){
+		return ResultUtils.success(exceptionRecordService.deleteExceptionRecord(deleteRequest));
+	}
+	// endregion
 }

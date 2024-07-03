@@ -5,19 +5,20 @@
 <mapper namespace="com.tyut.accesscontrol.mapper.AccessMapper">
 
     <resultMap id="BaseResultMap" type="com.tyut.accesscontrol.model.entity.Access">
-            <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="userId" jdbcType="BIGINT"/>
             <result property="checkInTime" column="checkInTime" jdbcType="TIMESTAMP"/>
             <result property="checkInStatus" column="checkInStatus" jdbcType="TINYINT"/>
             <result property="checkInImage" column="checkInImage" jdbcType="VARCHAR"/>
-            <result property="checkIutTime" column="checkIutTime" jdbcType="TIMESTAMP"/>
+            <result property="checkOutTime" column="checkOutTime" jdbcType="TIMESTAMP"/>
             <result property="checkOutStatus" column="checkOutStatus" jdbcType="TINYINT"/>
             <result property="checkOutImage" column="checkOutImage" jdbcType="VARCHAR"/>
+            <result property="flag" column="flag" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,userId,checkInTime,
-        checkInStatus,checkInImage,checkIutTime,
-        checkOutStatus,checkOutImage
+        checkInStatus,checkInImage,checkOutTime,
+        checkOutStatus,checkOutImage,flag
     </sql>
 </mapper>

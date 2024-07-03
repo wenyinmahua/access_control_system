@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 /**
 * @author mahua
 * @description 针对表【access(出入表)】的数据库操作Service实现
-* @createDate 2024-07-01 00:13:26
+* @createDate 2024-07-03 01:25:43
 */
 @Service
-public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
+public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access.Access>
     implements AccessService{
 
 }

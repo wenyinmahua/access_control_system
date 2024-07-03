@@ -1,5 +1,8 @@
 package com.tyut.accesscontrol.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tyut.accesscontrol.common.DeleteRequest;
+import com.tyut.accesscontrol.model.dto.UserQueryDTO;
 import com.tyut.accesscontrol.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,4 +13,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserService extends IService<User> {
 
+	Page<User> getPageUser(UserQueryDTO userQueryDTO);
+
+	Boolean updateUser(User user);
+
+	Boolean deleteUserById(DeleteRequest deleteRequest);
 }

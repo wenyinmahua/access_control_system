@@ -1,15 +1,22 @@
-package com.tyut.accesscontrol.model.vo;
+package com.tyut.accesscontrol.model.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.tyut.accesscontrol.common.PageRequest;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 用户表
+ * @TableName user
+ */
+@TableName(value ="user")
 @Data
-public class UserVO implements Serializable {
+public class UserQueryDTO extends PageRequest implements Serializable {
     /**
      * 用户id
      */
@@ -46,5 +53,6 @@ public class UserVO implements Serializable {
      */
     private Date updateTime;
 
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -78,6 +78,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 	public List<Long> getUserIds() {
 		return userMapper.getUserIds();
 	}
+
+	@Override
+	public List<Long> getUserIdsByName(String username) {
+		List<Long> ids = userMapper.getUserIdsByName(username);
+		return ids;
+	}
+
+	@Override
+	public String getUserNameById(Long userId) {
+		return userMapper.getUserNameById(userId);
+	}
 }
 
 

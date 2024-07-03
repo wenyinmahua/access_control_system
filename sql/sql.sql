@@ -29,17 +29,22 @@ CREATE TABLE if not exists user (
 
 -- 创建出入表
 drop table if exists access;
-CREATE TABLE if not exists access (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '出入表ID',
-    userId BIGINT NOT NULL COMMENT '用户ID',
-    checkInTime DATETIME DEFAULT NULL COMMENT '签到时间',
-    checkInStatus  TINYINT DEFAULT 0 COMMENT '0-未签到 | 1-已签到',
-    checkInImage TEXT COMMENT '签到状态图片',
-    checkOutTime DATETIME DEFAULT NULL COMMENT '签退时间',
-    checkOutStatus TINYINT DEFAULT 0 COMMENT '0-未签退 | 1-已签退',
-    checkOutImage TEXT COMMENT '签退状态图片',
-    flag TINYINT DEFAULT 0 COMMENT '0-签退 | 1-签到'
-) COMMENT '出入表';
+create table if not exists access
+(
+    id             bigint auto_increment comment '出入表ID'
+        primary key,
+    userId         bigint            not null comment '用户ID',
+    checkInTime    datetime          null comment '签到时间',
+    checkInStatus  tinyint default 0 null comment '0-未签到 | 1-已签到',
+    checkInImage   text              null comment '签到状态图片',
+    checkOutTime   datetime          null comment '签退时间',
+    checkOutStatus tinyint default 0 null comment '0-未签退 | 1-已签退',
+    checkOutImage  text              null comment '签退状态图片',
+    flag           tinyint default 0 null comment '0-签退 | 1-签到',
+    thisDay        datetime   default  CURRENT_TIMESTAMP  null comment '数据日期'
+)
+    comment '出入表';
+
 
 -- 创建异常记录表
 drop table if exists exception_record;

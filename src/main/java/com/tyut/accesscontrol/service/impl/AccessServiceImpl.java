@@ -1,5 +1,8 @@
 package com.tyut.accesscontrol.service.impl;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -10,9 +13,16 @@ import com.tyut.accesscontrol.common.ErrorCode;
 import com.tyut.accesscontrol.exception.BusinessException;
 import com.tyut.accesscontrol.model.dto.AccessQueryDTO;
 import com.tyut.accesscontrol.model.entity.Access;
+import com.tyut.accesscontrol.model.vo.AccessVO;
 import com.tyut.accesscontrol.service.AccessService;
 import com.tyut.accesscontrol.mapper.AccessMapper;
+import com.tyut.accesscontrol.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
 * @author mahua
@@ -20,43 +30,62 @@ import org.springframework.stereotype.Service;
 * @createDate 2024-07-03 01:25:43
 */
 @Service
+@Slf4j
 public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
     implements AccessService{
 
+	@Resource
+	private UserService userService;
+
 	@Override
-	public Page<Access> getPageAccess(AccessQueryDTO accessQueryDTO) {
+	public Page<AccessVO> getPageAccess(AccessQueryDTO accessQueryDTO) {
 		Long id = accessQueryDTO.getId();
-		Long userId = accessQueryDTO.getUserId();
+		String username = accessQueryDTO.getUsername();
 		Date checkInTime = accessQueryDTO.getCheckInTime();
 		Integer checkInStatus = accessQueryDTO.getCheckInStatus();
 		Date checkOutTime = accessQueryDTO.getCheckOutTime();
 		Integer checkOutStatus = accessQueryDTO.getCheckOutStatus();
-		Integer flag = accessQueryDTO.getFlag();
 		long current = accessQueryDTO.getCurrent();
 		long pageSize = accessQueryDTO.getPageSize();
 		QueryWrapper<Access> queryWrapper = new QueryWrapper<>();
 		if (id != null) {
 			queryWrapper.eq("id", id);
 		}
-		if (userId != null) {
-			queryWrapper.eq("user_id", userId);
+		if (username != null) {
+			List<Long> userIds = userService.getUserIdsByName(username);
+			if (!userIds.isEmpty()){
+				queryWrapper.in("userId", userIds);
+			}
 		}
 		if (checkInTime != null) {
-			queryWrapper.eq("check_in_time", checkInTime);
+			log.error(checkInTime.toString());
+			queryWrapper.gt("checkInTime", checkInTime);
+		}else if (StringUtils.isEmpty(username)){
+			LocalDate localDate = LocalDate.now();
+			queryWrapper.ge("thisDay",localDate);
 		}
 		if (checkInStatus != null) {
-			queryWrapper.eq("check_in_status", checkInStatus);
+			queryWrapper.eq("checkInStatus", checkInStatus);
 		}
 		if (checkOutTime != null) {
-			queryWrapper.eq("check_out_time", checkOutTime);
+			queryWrapper.eq("checkOutTime", checkOutTime);
 		}
 		if (checkOutStatus != null) {
-			queryWrapper.eq("check_out_status", checkOutStatus);
+			queryWrapper.eq("checkOutStatus", checkOutStatus);
 		}
-		if (flag != null) {
-			queryWrapper.eq("flag", flag);
-		}
-		return this.page(new Page<>(current, pageSize), queryWrapper);
+		Page<Access> accessPage = this.page(new Page<>(current, pageSize), queryWrapper);
+		List<AccessVO> accessVOList = accessPage.getRecords().stream().map(
+				access -> {
+					AccessVO accessVO = new AccessVO();
+					BeanUtils.copyProperties(access, accessVO);
+					accessVO.setUsername(userService.getUserNameById(access.getUserId()));
+					return accessVO;
+				}
+		).collect(Collectors.toList());
+		Page<AccessVO> accessVOPage = new Page<>();
+		accessVOPage.setTotal(accessPage.getTotal());
+		accessVOPage.setRecords(accessVOList);
+		return accessVOPage;
 
 	}
 

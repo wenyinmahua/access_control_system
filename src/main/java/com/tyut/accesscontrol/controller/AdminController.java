@@ -11,6 +11,7 @@ import com.tyut.accesscontrol.model.dto.UserQueryDTO;
 import com.tyut.accesscontrol.model.entity.Access;
 import com.tyut.accesscontrol.model.entity.Admin;
 import com.tyut.accesscontrol.model.entity.User;
+import com.tyut.accesscontrol.model.vo.AccessVO;
 import com.tyut.accesscontrol.service.AccessService;
 import com.tyut.accesscontrol.service.AdminService;
 import com.tyut.accesscontrol.service.UserService;
@@ -103,7 +104,7 @@ public class AdminController {
 	//获取出入表
 	@PostMapping("/access/page")
 	@ApiOperation("分页获取出入表")
-	public BaseResponse<Page<Access>> getPageAccess(@RequestBody AccessQueryDTO accessQueryDTO){
+	public BaseResponse<Page<AccessVO>> getPageAccess(@RequestBody AccessQueryDTO accessQueryDTO){
 		return ResultUtils.success(accessService.getPageAccess(accessQueryDTO));
 	}
 

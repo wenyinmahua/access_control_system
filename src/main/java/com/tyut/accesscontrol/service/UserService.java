@@ -22,4 +22,8 @@ public interface UserService extends IService<User> {
 	Boolean deleteUserById(DeleteRequest deleteRequest);
 
 	List<Long> getUserIds();
+
+	List<Long> getUserIdsByName(String username);
+
+	String getUserNameById(Long userId);
 }

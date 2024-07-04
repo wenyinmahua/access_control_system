@@ -13,6 +13,7 @@
             <result property="checkOutTime" column="checkOutTime" jdbcType="TIMESTAMP"/>
             <result property="checkOutStatus" column="checkOutStatus" jdbcType="TINYINT"/>
             <result property="checkOutImage" column="checkOutImage" jdbcType="VARCHAR"/>
+            <result property="thisDay" column="thisDay" jdbcType="DATE"/>
             <result property="flag" column="flag" jdbcType="TINYINT"/>
     </resultMap>
 

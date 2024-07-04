@@ -27,7 +27,7 @@ public class preExportUserTableToAccessTableJob {
 
 
 
-	@Scheduled(cron = "0 0 0 * * ?")
+	@Scheduled(cron = "0 51 0 * * ?")
 	public void doExportUserTableToAccessTableJob(){
 		List<Long> ids = userService.getUserIds();
 		if (ids.isEmpty()){
@@ -36,12 +36,13 @@ public class preExportUserTableToAccessTableJob {
 		for (Long id : ids) {
 			Access access = new Access();
 			access.setUserId(id);
+			access.setThisDay(new Date());
 			accessService.save(access);
 		}
 
 	}
 
-	@Scheduled(cron = "0 54 13 * * ?")
+	@Scheduled(cron = "0 0 0 * * ?")
 	public void doUpdateLogJob(){
 		Log log = new Log();
 		log.setLogDate(LocalDate.now());

@@ -136,6 +136,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		String imageBase64 = "data:image/jpg;base64," + Base64Utils.encodeToString(file.getBytes());
 		Long signUserId = Long.valueOf(file.getOriginalFilename().matches("-?\\d+") ? Long.valueOf(file.getOriginalFilename()) : -1);
 		LocalDate thisDay = LocalDate.now();
+		String userNameById = userService.getUserNameById(signUserId);
 		if (StringUtils.isEmpty(imageBase64)){
 		throw new BusinessException(ErrorCode.PARAMS_ERROR);
 		}
@@ -152,7 +153,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		}
 		LocalTime now = LocalTime.now();
 		// 判断当前时间是否在0点到6点之间
-		boolean isNotSignInTime = now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.of(6, 00));
+		boolean isNotSignInTime = now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.of(0, 30));
 		if (isNotSignInTime) {
 			ExceptionRecord exceptionRecord = new ExceptionRecord();
 			exceptionRecord.setRecognitionTime(new Date());
@@ -179,7 +180,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		// 之前状态是签到，这次识别为签退
 		if (Objects.equals(flag, SignInOrOutConstant.SIGN_IN)){
 			if(StringUtils.isNotEmpty(access.getCheckOutImage())){
-				return ResultUtils.error(ErrorCode.OPERATION_ERROR,"已签退");
+				return ResultUtils.error(ErrorCode.OPERATION_ERROR,userNameById + "已签退");
 			}
 			updateAccess.setCheckOutImage(imageBase64);
 			updateAccess.setCheckOutTime(new Date());
@@ -188,7 +189,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 			updateWrapper.eq("logDate",thisDay).setSql("totalCheckedOut = totalCheckedOut + 1");
 			logService.update(updateWrapper);
-			return ResultUtils.success(this.updateById(updateAccess),"签退成功！");
+			return ResultUtils.success(this.updateById(updateAccess),userNameById+"签退成功！");
 		} else {
 				// 之前的状态是未签到，这里是签到操作
 				updateAccess.setCheckInImage(imageBase64);
@@ -198,7 +199,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 				UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 				updateWrapper.eq("logDate",thisDay).setSql("totalCheckedIn = totalCheckedIn + 1");
 				logService.update(updateWrapper);
-				return ResultUtils.success(this.updateById(updateAccess),"签到成功！");
+				return ResultUtils.success(this.updateById(updateAccess),userNameById+"签到成功！");
 
 		}
 	}

@@ -61,6 +61,8 @@ public class Access implements Serializable {
 	 */
 	private Integer flag;
 
+	private Date thisDay;
+
 	@TableField(exist = false)
 	private static final long serialVersionUID = 1L;
 }

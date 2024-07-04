@@ -4,25 +4,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.tyut.accesscontrol.common.PageRequest;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户表查询
+ * 用户表
  * @TableName user
  */
 @TableName(value ="user")
 @Data
-public class UserQueryDTO extends PageRequest implements Serializable {
-    /**
-     * 用户id
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
-
+public class UserDTO implements Serializable {
     /**
      * 用户姓名
      */
@@ -43,15 +36,6 @@ public class UserQueryDTO extends PageRequest implements Serializable {
      */
     private String position;
 
-    /**
-     * 注册时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

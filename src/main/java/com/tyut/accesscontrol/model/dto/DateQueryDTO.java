@@ -6,6 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 日期查询
+ */
+
 @Data
 public class DateQueryDTO implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")

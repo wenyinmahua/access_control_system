@@ -27,6 +27,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 
 	private static final String SALT = "TYUT";
 
+	/**
+	 * 管理员登录
+	 * @param adminLoginDTO
+	 * @param request
+	 * @return
+	 */
 	@Override
 	public Admin login(AdminLoginDTO adminLoginDTO, HttpServletRequest request) {
 		if (adminLoginDTO == null){
@@ -39,19 +45,24 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 		}
 		QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq("userAccount",userAccount);
-		Admin admin = this.getOne(queryWrapper);
+		Admin admin = this.getOne(queryWrapper);  //获取管理员对象
 		if (admin == null){
 			throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户不存在");
 		}
-		String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+		String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());  //密码MD5加密，并拼接SALT字符串拼接到用户密码前
 		if (!admin.getUserPassword().equals(encryptPassword)){
 			throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户密码错误");
 		}
 		admin.setUserPassword(null);
-		request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, admin);
+		request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, admin);//但是这个键不唯一啊
 		return admin;
 	}
 
+	/**
+	 * 管理员登出
+	 * @param request
+	 * @return
+	 */
 	@Override
 	public Boolean logout(HttpServletRequest request) {
 		if (request == null){
@@ -61,6 +72,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 		return true;
 	}
 
+	/**
+	 * 获取已登录用户
+	 * @param request
+	 * @return
+	 */
 	@Override
 	public Admin getLoginAdmin(HttpServletRequest request) {
 		if (request == null){
@@ -72,6 +88,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 		return loginAdmin;
 	}
 
+	/**
+	 * 管理员注册
+	 * @param adminRegisterDTO
+	 * @return
+	 */
 	@Override
 	public Boolean register(AdminRegisterDTO adminRegisterDTO) {
 		if (adminRegisterDTO == null){
@@ -88,10 +109,15 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 		}
 		Admin admin = new Admin();
 		admin.setUserAccount(userAccount);
-		admin.setUserPassword(DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes()));
+		admin.setUserPassword(DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes()));  //MD5加密
 		return this.save(admin);
 	}
 
+	/**
+	 * 更新管理员信息
+	 * @param admin
+	 * @return
+	 */
 	@Override
 	public Boolean updateAdmin(Admin admin) {
 		if (admin == null){

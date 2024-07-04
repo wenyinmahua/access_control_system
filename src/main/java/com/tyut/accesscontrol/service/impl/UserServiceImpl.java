@@ -7,11 +7,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tyut.accesscontrol.common.DeleteRequest;
 import com.tyut.accesscontrol.common.ErrorCode;
 import com.tyut.accesscontrol.exception.BusinessException;
+import com.tyut.accesscontrol.model.dto.UserDTO;
 import com.tyut.accesscontrol.model.dto.UserQueryDTO;
 import com.tyut.accesscontrol.model.entity.User;
 import com.tyut.accesscontrol.service.UserService;
 import com.tyut.accesscontrol.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -89,6 +91,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 	public String getUserNameById(Long userId) {
 		return userMapper.getUserNameById(userId);
 	}
+
+    @Override
+    public Long userRegister(UserDTO userDTO) {
+		String username = userDTO.getUsername();
+		QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+		if (StringUtils.isEmpty(username)){
+			throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户名不能为空");
+		}
+		User user = new User();
+		BeanUtils.copyProperties(userDTO, user);
+		this.save(user);
+		Long id = user.getId();
+		return id;
+    }
 }
 
 

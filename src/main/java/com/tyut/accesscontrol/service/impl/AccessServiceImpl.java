@@ -57,6 +57,11 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 	@Resource
 	private LogService logService;
 
+	/**
+	 * 条件查询
+	 * @param accessQueryDTO
+	 * @return
+	 */
 	@Override
 	public Page<AccessVO> getPageAccess(AccessQueryDTO accessQueryDTO) {
 		Long id = accessQueryDTO.getId();
@@ -72,7 +77,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			queryWrapper.eq("id", id);
 		}
 		if (!StringUtils.isEmpty(username)) {
-			List<Long> userIds = userService.getUserIdsByName(username);
+			List<Long> userIds = userService.getUserIdsByName(username);  //模糊查询
 			if (!userIds.isEmpty()){
 				queryWrapper.in("userId", userIds);
 			}
@@ -96,21 +101,25 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 			queryWrapper.eq("checkOutStatus", checkOutStatus);
 		}
 		Page<Access> accessPage = this.page(new Page<>(current, pageSize), queryWrapper);
-		List<AccessVO> accessVOList = accessPage.getRecords().stream().map(
+		List<AccessVO> accessVOList = accessPage.getRecords().stream().map(  //Java 8 流式处理
 				access -> {
 					AccessVO accessVO = new AccessVO();
-					BeanUtils.copyProperties(access, accessVO);
+					BeanUtils.copyProperties(access, accessVO);  //将 将 Access 实体的属性复制到 AccessVO 对象
 					accessVO.setUsername(userService.getUserNameById(access.getUserId()));
 					return accessVO;
 				}
-		).collect(Collectors.toList());
+		).collect(Collectors.toList());  //将转换得到的 AccessVO 对象集合存储在 accessVOList 中
 		Page<AccessVO> accessVOPage = new Page<>();
-		accessVOPage.setTotal(accessPage.getTotal());
-		accessVOPage.setRecords(accessVOList);
+		accessVOPage.setTotal(accessPage.getTotal());  //设置总记录数
+		accessVOPage.setRecords(accessVOList);   //Records存的是数据库里面查询出来的 实体对象 的集合
 		return accessVOPage;
-
 	}
 
+	/**
+	 * 更新出入表
+	 * @param access
+	 * @return
+	 */
 	@Override
 	public Boolean updateAccess(Access access) {
 		if (access == null){
@@ -121,6 +130,11 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		return this.update(access,updateWrapper);
 	}
 
+	/**
+	 * 根据id删除记录
+	 * @param deleteRequest
+	 * @return
+	 */
 	@Override
 	public Boolean deleteAccessById(DeleteRequest deleteRequest) {
 		Long id = deleteRequest.getId();
@@ -130,9 +144,15 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		return this.removeById(id);
 	}
 
+	/**
+	 * 签到签退图片传输
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	@Override
 	public BaseResponse<Boolean> userSignInOrOut(MultipartFile file) throws IOException {
-
+		//获取Base64编码
 		String imageBase64 = "data:image/jpg;base64," + Base64Utils.encodeToString(file.getBytes());
 		Long signUserId = Long.valueOf(file.getOriginalFilename().matches("-?\\d+") ? Long.valueOf(file.getOriginalFilename()) : -1);
 		LocalDate thisDay = LocalDate.now();
@@ -140,7 +160,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		if (StringUtils.isEmpty(imageBase64)){
 		throw new BusinessException(ErrorCode.PARAMS_ERROR);
 		}
-		if (signUserId == null || signUserId < 0){
+		if (signUserId == null || signUserId < 0){  //对未录入的人脸异常识别进行记录
 			ExceptionRecord exceptionRecord = new ExceptionRecord();
 			exceptionRecord.setRecognitionTime(new Date());
 			exceptionRecord.setRecognitionImage(imageBase64);
@@ -176,10 +196,10 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 		Access updateAccess = new Access();
 		updateAccess.setId(access.getId());
 		updateAccess.setUserId(signUserId);
-		Integer flag = access.getFlag();
+		Integer flag = access.getFlag();  //签到签退标志
 		// 之前状态是签到，这次识别为签退
 		if (Objects.equals(flag, SignInOrOutConstant.SIGN_IN)){
-			if(StringUtils.isNotEmpty(access.getCheckOutImage())){
+			if(StringUtils.isNotEmpty(access.getCheckOutImage())){  //如果已有签退记录
 				return ResultUtils.error(ErrorCode.OPERATION_ERROR,userNameById + "已签退");
 			}
 			updateAccess.setCheckOutImage(imageBase64);
@@ -195,7 +215,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access>
 				updateAccess.setCheckInImage(imageBase64);
 				updateAccess.setCheckInTime(new Date());
 				updateAccess.setCheckInStatus(SignInOrOutConstant.SIGN_IN);
-				updateAccess.setFlag(SignInOrOutConstant.SIGN_IN);
+				updateAccess.setFlag(SignInOrOutConstant.SIGN_IN);  // 将标志设置为签到
 				UpdateWrapper<Log> updateWrapper = new UpdateWrapper<>();
 				updateWrapper.eq("logDate",thisDay).setSql("totalCheckedIn = totalCheckedIn + 1");
 				logService.update(updateWrapper);

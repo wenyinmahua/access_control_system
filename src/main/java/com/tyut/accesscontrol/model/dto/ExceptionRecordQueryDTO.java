@@ -10,7 +10,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-
+/**
+ * 异常记录表查询
+ */
 @Data
 public class ExceptionRecordQueryDTO extends PageRequest implements Serializable {
     /**
